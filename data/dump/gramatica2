@@ -1,0 +1,17 @@
+#GRAMMA
+% start S
+S[SEM= ('(' + ?vp + '(' + ?np + ')') ] -> NP[SEM=?np] VP[SEM=?vp]
+VP[SEM=('('+?vt+'('+?np+'))')] -> Vt[SEM=?vt] NP[SEM=?np]
+VP[SEM=('('+?vi+'('+?np1+'))('+?np2+')')] -> Vi[SEM=?vi] NP1[SEM=?np1] NP2[SEM=?np2]
+NP1[SEM=?np] -> NP[SEM=?np]
+NP2[SEM=?np] -> NP[SEM=?np]
+NP[SEM='gato'] -> 'gato'
+NP[SEM=?np] -> DET NP[SEM=?np]
+DET -> article
+article  -> 'a'
+article -> 'un'
+NP[SEM='Roberto'] -> 'Roberto'
+NP[SEM='Raul'] -> 'Raul'
+VP -> Vi
+Vt[SEM='\\x\y.busca(y,x)'] -> 'busca'
+Vi[SEM='\\x\y.\z.regala(z,y,x)'] -> 'regala'

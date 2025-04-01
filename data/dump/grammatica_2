@@ -1,0 +1,210 @@
+
+#GRAMMA
+% start S
+S[AGR=?a,SEM=?swh] -> Swh[AGR=?a,SEM=?swh]
+
+
+#rules DCL Working
+
+S[AGR=?a,SEM=?sdcl] -> SDCL[AGR=?a,SEM=?sdcl] TERMINATORDCL
+TERMINATORDCL -> '.' | '?'
+SDCL[AGR=?a,SEM=(?npdcl + ?vpdcl)] -> NPDCL[AGR=?a,SEM=?npdcl] VPDCL[AGR=?a,SEM=?vpdcl]
+NPDCL[SEM=?np1dcl] -> NP1DCL[AGR=?a,SEM=?np1dcl]
+NP1DCL[AGR=?a,SEM=?pname] -> pname[AGR=?a,SEM=?pname]
+NP1DCL[AGR=?a,SEM=(?detdcl + ?np2dcl)] -> DETDCL[AGR=?a,SEM=?detdcl] NP2DCL[AGR=?a,SEM=?np2dcl]
+NP2DCL[AGR=?a,SEM=(?noun0 + ?npdcl)] -> NOUN0[AGR=?a,SEM=?noun0] m_preposition NPDCL[SEM=?npdcl]
+NOUN0[AGR=?a,SEM=?noun2] ->  NOUN2[AGR=?a,SEM=?noun2]
+NOUN2[AGR=?a,SEM=?attribute] -> attribute[AGR=?a,SEM=?attribute]
+DETDCL[SEM=?article] -> article[SEM=?article]
+VPDCL[AGR=?a,SEM=?vp1dcl] -> VP1DCL[AGR=?a,SEM=?vp1dcl]
+VP1DCL[AGR=?a,SEM=(?verb + ?npdcl)] -> verb[AGR=?a,SEM=?verb] NPDCL[AGR=?a,SEM=?npdcl]
+
+
+
+##############
+###LEXICON
+##############
+#  Pronombres Interrogativos
+int_pron1[SEM='(\P.\Q.whq(x0,(P(x0)&Q(x0))))'] -> 'que'
+int_pron1[AGR=[NUM='sg']] -> 'cada'
+int_pron1[AGR=[NUM='sg',GND='m']] -> 'cuanto'
+int_pron1[AGR=[NUM='sg',  GND='f']]   -> 'cuanta'
+int_pron1[AGR=[NUM='pl',GND='m']]    -> 'cuantos'
+int_pron1[AGR=[NUM='pl',GND='f']] -> 'cuantas'
+int_pron2[AGR=[NUM='sg']] -> 'cual'
+int_pron2[AGR=[NUM='pl']] -> 'cuales'
+int_pron2 -> 'donde'
+int_pron2[AGR=[NUM='sg']] -> 'quien'
+int_pron2[AGR=[NUM='pl']] -> 'quienes'
+#Negacion
+neg[SEM='\(w,(SmVPhere[w]))'] -> 'no'
+#Matchin preposition
+m_preposition -> 'de'|'del'|'el'|'con'
+
+
+#*  Comparativos  */
+comp ->'mayor o igual a'
+comp ->'mayor o igual que'
+comp ->'menor o igual a'
+comp ->'menor o igual que'
+comp ->'mayor a'
+comp ->'mayor que'
+comp ->'menor a'
+comp ->'menor que'
+comp ->'igual a'
+comp ->'igual que'
+comp -> 'distinto de'
+comp -> 'diferente de'
+
+#  Pronombres Relativos  */
+rel_pron1 -> 'que'
+rel_pron2[AGR=[NUM='sg']] -> 'cuyo'
+rel_pron2[AGR=[NUM='sg']] -> 'cuya'
+rel_pron2[AGR=[NUM='pl']] -> 'cuyas'
+rel_pron2[AGR=[NUM='pl']] -> 'cuyos'
+
+
+#  Preposiciones */
+preposition -> 'en'
+preposition -> 'a'
+preposition -> 'ante'
+preposition -> 'bajo'
+preposition -> 'para'
+preposition -> 'de'
+
+#*  Conjunciones */
+conjunction -> 'y'
+conjunction -> 'o'
+
+
+#artichles
+article[AGR=[NUM='sg',GND='m']] -> 'el'
+article[AGR=[NUM='sg',GND='f'],SEM='(\P.\Q.exists x0(P(x0)&Q(x0)))'] -> 'la'
+article[AGR=[NUM='pl', GND='m']] -> 'los'
+article[AGR=[NUM='pl',GND='f']] -> 'las'
+article[AGR=[NUM='sg',GND='m']] -> 'un'
+article[AGR=[NUM='sg',  GND='f']] -> 'una'
+article[AGR=[NUM='pl',GND='m']] -> 'unos'
+article[AGR=[NUM='pl',GND='f']] -> 'unas'
+#/*  Cuantificadores */
+
+quantifier[AGR=[NUM='pl',GND='m']] -> 'todos'
+quantifier[AGR=[NUM='pl',GND='f' ]] -> 'todas'
+
+quantifier[AGR=[NUM='sg']] -> 'cualquier'
+quantifier[AGR=[NUM='sg',GND='m']] -> 'algun'
+quantifier[AGR=[NUM='sg',GND='f']] -> 'alguna'
+quantifier[AGR=[NUM='pl',GND='m']] -> 'algunos'
+quantifier[AGR=[NUM='pl',GND='f']] -> 'algunas'
+quantifier[AGR=[NUM='sg',GND='m']] -> 'ningun'
+quantifier[AGR=[NUM='sg',GND='f']] -> 'ninguna'
+
+units  -> 'peso'
+units  -> 'pesos'
+units  -> 'de pesos'
+
+
+number_eqv  -> 'un'
+number_eqv  -> 'uno'
+number_eqv  -> 'dos'
+number_eqv  -> 'tres'
+number_eqv  -> 'cuatro'
+number_eqv  -> 'cinco'
+number_eqv  -> 'seis'
+number_eqv  -> 'siete'
+number_eqv  -> 'ocho'
+number_eqv  -> 'nueve'
+number_eqv  -> 'diez'
+number_eqv  -> 'once'
+number_eqv  -> 'doce'
+number_eqv  -> 'trece'
+number_eqv  -> 'catorce'
+number_eqv  -> 'quince'
+number_eqv  -> 'dieciseis'
+number_eqv  -> 'diecisiete'
+number_eqv  -> 'dieciocho'
+number_eqv  -> 'diecinueve'
+number_eqv  -> 'veinte'
+number_eqv  -> 'treinta'
+number_eqv  -> 'cuarenta'
+number_eqv  -> 'cincuenta'
+number_eqv  -> 'sesenta'
+number_eqv  -> 'setenta'
+number_eqv  -> 'ochenta'
+number_eqv  -> 'noventa'
+number_eqv  -> 'cien'
+number_eqv  -> 'docientos'
+number_eqv  -> 'trecientos'
+number_eqv  -> 'cuatrocientos'
+number_eqv  -> 'quinientos'
+number_eqv  -> 'seicientos'
+number_eqv  -> 'setecientos'
+number_eqv  -> 'ochocientos'
+number_eqv  -> 'novecientos'
+number_eqv  -> 'mil'
+number_eqv  -> 'millon'
+number_eqv  -> 'millones'
+
+noun[AGR=[NUM='sg',ROOT='pais',GND='f'],SEM='(\x.pais(x))']->'pais'
+
+noun[AGR=[NUM='pl',ROOT='pais',GND='m']]->'paises'
+noun[AGR=[NUM='sg',ROOT='ciudad',GND='f']]->'ciudad'
+noun[AGR=[NUM='pl',ROOT='ciudad',GND='f']]->'ciudades'
+noun[AGR=[NUM='sg',ROOT='oceano',GND='m']]->'oceano'
+noun[AGR=[NUM='pl',ROOT='oceano',GND='m']]->'oceanos'
+noun[AGR=[NUM='sg',ROOT='lago',GND='m']]->'lago'
+noun[AGR=[NUM='pl',ROOT='lago',GND='m']]->'lagos'
+noun[AGR=[NUM='sg',ROOT='laguna',GND='f']]->'laguna'
+noun[AGR=[NUM='pl',ROOT='laguna',GND='f']]->'lagunas'
+noun[AGR=[NUM='sg',ROOT='rio',GND='m']]->'rio'
+noun[AGR=[NUM='pl',OOT='rio',GND='m']]->'rios'
+noun[AGR=[NUM='sg',ROOT='mar',GND='m']]->'mar'
+noun[AGR=[NUM='pl',ROOT='mar',GND='m']]->'mares'
+noun[AGR=[NUM='sg',ROOT='latitud',GND='f']]->'latitud'
+noun[AGR=[NUM='pl',ROOT='latitud',GND='f']]->'latitudes'
+noun[AGR=[NUM='sg',ROOT='longitud',GND='f']]->'longitud'
+noun[AGR=[NUM='pl',ROOT='longitud',GND='f']]->'longitudes'
+noun[AGR=[NUM='sg',ROOT='area',GND='m']]->'area'
+noun[AGR=[NUM='sg',ROOT='area',GND='f']]->'areas'
+noun[AGR=[NUM='sg',ROOT='lugar',GND='m']]->'lugar'
+noun[AGR=[NUM='sg',ROOT='region',GND='f']]->'region'
+noun[AGR=[NUM='pl',ROOT='region',GND='f']]->'regiones'
+
+#/*  Atributos */
+
+attribute[AGR=[NUM='sg',ROOT='capital',GND='f'],SEM='(\x.\y(capital(x,y)))'] -> 'capital'
+attribute[AGR=[NUM='pl',ROOT='capital',GND='f']] -> 'capitales'
+attribute[AGR=[NUM='sg',ROOT='ciudad',GND='f']] -> 'ciudad'
+attribute[AGR=[NUM='pl',ROOT='ciudad',GND='f']]-> 'ciudades'
+attribute[AGR=[NUM='sg',ROOT='nombre',GND='m']] -> 'nombre'
+attribute[AGR=[NUM='pl',ROOT='nombre',GND='m']] -> 'nombres'
+attribute[AGR=[NUM='sg',ROOT='poblacion',GND='f']] -> 'poblacion'
+attribute[AGR=[NUM='pl',ROOT='poblacion',GND='f']] -> 'poblaciones'
+attribute[AGR=[NUM='sg',ROOT='moneda',GND='f' ]] -> 'moneda'
+attribute[AGR=[NUM='pl',ROOT='moneda',GND='f']] -> 'monedas'
+attribute[AGR=[NUM='sg',ROOT='rio',GND='m']] -> 'rio'
+attribute[AGR=[NUM='pl',ROOT='rio',GND='m']] -> 'rios'
+
+# hacer el pnname
+pname[SEM='\P.P(Albania)'] -> 'Atlantico'| $PAIS
+#$PAIS
+
+
+#/*AdjetivosCalificativos*#/
+
+adj_cal[AGR=[NUM='sg',GND='m']] ->'europeo'
+adj_cal[AGR=[NUM='pl',GND='m']] ->'europeos'
+adj_cal[AGR=[NUM='sg',GND='f']] ->'europea'
+adj_cal[AGR=[NUM='pl',GND='f']] ->'europeas'
+adj_cal[AGR=[NUM='sg',GND='m']] ->'americano'
+adj_cal[AGR=[NUM='pl',GND='m']] ->'americanos'
+adj_cal[AGR=[NUM='sg',GND='f']] ->'americana'
+adj_cal[AGR=[NUM='pl',GND='f']] ->'americanas'
+adj_cal[AGR=[NUM='sg',GND='m']] ->'asiatico'
+adj_cal[AGR=[NUM='sg',GND='f']] ->'asiatica'
+adj_cal[AGR=[NUM='pl',GND='m']] ->'asiaticos'
+adj_cal[AGR=[NUM='pl',GND='f']] ->'asiaticas'
+adj_cal[AGR=[NUM='sg',GND='m']] ->'africano'
+adj_cal[AGR=[NUM='pl',GND='m']] ->'africanos'
+adj_cal[AGR=[NUM='sg',GND='f']] ->'africana'
+adj_cal[AGR=[NUM='pl',GND='f']] ->'africanas'

@@ -1,0 +1,449 @@
+##############
+## GRAMMA RULES
+##############
+% start S
+
+#Sentence Structure
+S[AGR=?a,SEM=?s] -> S[AGR=?a,SEM=?s]
+S[AGR=?a,SEM=?swh] -> SWH[AGR=?a,SEM=?swh] TERMINATOR1
+S[AGR=?a,SEM=?sdcl] -> SDCL[AGR=?a,SEM=?sdcl] TERMINATOR2
+S[AGR=?a,SEM=?sq] -> SQ[AGR=?a,SEM=?sq]
+
+TERMINATOR1 -> '?'
+TERMINATOR2 -> '.'
+
+
+SDCL[ARG=?a,SEM=(?SmNP + '(' + ?SmVP + ')' )] -> NP[ARG=?a,SEM=?SmNP] VP[ARG=?a,SEM=?SmVP]
+SQ[ARG=?a, SEM=(?SmSV+'('+?SmV+')')] -> Neg verb[ARG=?a,SEM=?SmV] SVFNeg[ARG=?a,SEM=?SmSV]
+SWH[ARG=?a, SEM=(?SmNP+'('+?SmSNP+')')] -> NPWh[ARG=?a, SEM=?SmNP] SsNP[ARG=?a, SEM=?SmSNP]
+
+
+SsNP[ARG=?a, SEM=('\\n.('+?SmNP+'('+SmVPNP+'(n)))')] -> NP[ARG=?a, SEM=?SmNP] VPsNP[ARG=?a, SEM=?SmVPNP]
+
+SsNP[ARG=?a, SEM=(?SmNPNP+'('+?SmVP+')')] -> NPsNP[ARG=?a, SEM=?SmNPNP] VP[ARG=?a, SEM=?SmVP]
+SVFpos[ARG=?a, SEM=('(\w.('+?SmNP+'('+?SmVPV+'(w))))')] -> NP[ARG=?a, SEM=?SmNP] VP1VF[ARG=?a, SEM=?SmVPV]
+SVFneg[ARG=?a, SEM=('(\w.('+?SmNP+'('+?SmVPV+'(w))))')] -> NPneg[ARG=?a, SEM=?SmNP] VP1VFneg[ARG=?a, SEM=?SmVPV]
+SVFneg[ARG=?a, SEM=('(\w.('+?SmNP+'('+?SmVPV+'(w))))')] -> NP[ARG=?a, SEM=?SmNP]  VP1VFneg[ARG=?a, SEM=?SmVPV]
+
+# Noun-Phrase Structure
+
+
+NP[ARG=?a, SEM=?SmNP] -> NP1[ARG=?a, SEM=?SmNP]
+NP[ARG=?a, SEM=('\w.('+?SmNP1+'(w)&'+?SmNP+'(w))')] -> NP1[ARG=?a, SEM=?SmNP1] conj NP[ARG=?a, SEM=?SmNP]
+NP[ARG=?a, SEM=('\w.('+?SmNP1+'(w)|'+?SmNP+'(w))')] -> NP1[ARG=?a, SEM=?SmNP1] conj NP[ARG=?a, SEM=?SmNP]
+#NP[ARG=?a, SEM=(?SmDet+'('+?SmNP2+')')] -> det[ARG=?a, SEM=?SmDet] NP2[ARG=?a, SEM=?SmNP2]
+NP[ARG=?a, SEM=?SmNPWh] -> NP1Wh[ARG=?a, SEM=?SmNPWh]
+
+
+NP1[ARG=?a, SEM=(?SmDet +'('+?SmNP2 +')')] -> detArtDef[ARG=?a, SEM=?SmDet] NP2[ARG=?a, SEM=?SmNP2]
+NP1[ARG=?a, SEM=?SmName] -> detArtDef proper_name[ARG=?a, SEM=?SmName]
+NP1[ARG=?a, SEM=?SmName] -> proper_name[ARG=?a, SEM=?SmName]
+NP1[ARG=?a, SEM=?SmValue] -> numeric_value[ARG=?a, SEM=?SmValue]
+NP1[ARG=?a, SEM=(?SmDet+'('+?SmNP2+')')] -> detNPneg[ARG=?a, SEM=?SmDet] NP2[ARG=?a, SEM=?SmNP2]
+NPWh[ARG=?a, SEM=?SmNPWh] -> NP1Wh[ARG=?a, SEM=?SmNPWh]
+
+NP1Wh[ARG=?a, SEM=(?SmIP+'('+?SmNP2+')')] -> int_pron1[ARG=?a, SEM=?SmIP] NP2[ARG=?a, SEM=?SmNP2]
+NP1Wh[ARG=?a, SEM=?SmIP] -> int_pron1[ARG=?a, SEM=?SmIP]
+NP1Wh[ARG=?a, SEM=?SmIP] -> int_pron2[ARG=?a, SEM=?SmIP]
+
+                   #\(q,\(n,exists(x0,SmN0*[x0]*[n]&q*[x0])))
+NPsNP[ARG=?a, SEM=('\Q.(\\n.( exists x0.(' + ?SmN0 + '(x0) (n) & Q(x0))))')] -> noun0[ARG=?a, SEM=?SmN0]
+NPsNP[ARG=?a, SEM='(\\n.n)'] ->
+
+#S[ARG=?a, SEM=('(\w.'+?SmNP+'('+?SmN0+'(w))))')] -> noun0[ARG=?a, SEM=?SmN0] match_preposition
+#S[ARG=?a, SEM=('(\w.'+?SmNP+'('+?SmN0+'(w))))')] -> noun0[ARG=?a, SEM=?SmN0] match_preposition NP[ARG=?a, SEM=?SmNP]
+
+
+NP2[ARG=?a, SEM=('\w.('+?SmNV+'('+?SmN0+')(w))')] -> noun0[ARG=?a, SEM=?SmN0] match_preposition numeric_value[ARG=?a, SEM=?SmNV]
+NP2[ARG=?a, SEM=('\w.('+?SmNP+'('+?SmN0+'(w)))')] -> noun0[ARG=?a, SEM=?SmN0] match_preposition NP[ARG=?a, SEM=?SmNP]
+NP2[ARG=?a, SEM=('\w.(exists x0.('+?SmN0+'(x0)(w)&'+?SmRNP+'(x0)))')] -> noun0[ARG=?a, SEM=?SmN0]  rest_np[ARG=?a, SEM=?SmRNP]
+NP2[ARG=?a, SEM=('\w.('+?SmN1+'(w)&'+?SmRNP+'(w))')] -> noun1[ARG=?a, SEM=?SmN1] rest_np[ARG=?a, SEM=?SmRNP]
+NP2[ARG=?a, SEM=?SmN1] -> noun1[ARG=?a, SEM=?SmN1]
+
+noun0[ARG=?a, SEM=?SmN2] -> noun2[ARG=?a, SEM=?SmN2]
+noun0[ARG=?a, SEM=('(\w.'+?SmN2+'(w)&'+?SmN0+'(w))')] -> noun2[ARG=?a, SEM=?SmN2] conjuncion noun0[ARG=?a, SEM=?SmN0]
+noun0[ARG=?a, SEM=('(\w.'+?SmN2+'(w)|'+?SmN0+'(w))')] -> noun2[ARG=?a, SEM=?SmN2] conjuncion noun0[ARG=?a, SEM=?SmN0]
+
+#rest noun phrase
+rest_np[ARG=?a, SEM=?SmPP] -> PP[ARG=?a, SEM=?SmPP]
+rest_np[ARG=?a, SEM=?SmSNP] -> RP[ARG=?a, SEM=?SmSNP]
+rest_np[ARG=?a, SEM=('\w.('+?SmSNP+'(w)&'+?SmRNP+'(w))')] -> RP[ARG=?a, SEM=?SmSNP] rest_np[ARG=?a, SEM=?SmRNP]
+rest_np[ARG=?a, SEM=('\w.('+?SmAdjs+'(w)&'+?SmRNP+'(w))')] -> adjectives[ARG=?a, SEM=?SmAdjs] rest_np[ARG=?a, SEM=?SmRNP]
+rest_np[ARG=?a, SEM=?SmAdjs] -> adjectives[ARG=?a, SEM=?SmAdjs]
+
+#meta rules negation
+
+VP[ARG=?a, SEM=('(\w.~('+?SmVP+'(w)))')] -> neg VP[ARG=?a, SEM=?SmVP]
+
+VP[ARG=?a, SEM=?SmVP] -> VP1[ARG=?a, SEM=?SmVP]
+VP[ARG=?a, SEM=('\w.('+?SmVP1+'(w)&'+?SmVP+'(w))')] -> VP1[ARG=?a, SEM=?SmVP1] conjuciony VP[ARG=?a, SEM=?SmVP]
+VP[ARG=?a, SEM=('(\w.'+?SmVP1+'(w)|'+?SmVP+'(w))')] -> VP1[ARG=?a, SEM=?SmVP1] conjuciono VP[ARG=?a, SEM=?SmVP]
+
+
+
+VP1[ARG=?a, SEM=('\w.(' + ?SmNP + '(' + ?SmVt + '(w)))')] -> verb[ARG=?a, SEM=?SmVt] NP[ARG=?a, SEM=?SmNP]
+VP1[ARG=?a, SEM=('(\w.'+?SmNP+'('+?SmVt+'(w)&'+?SmPP+'(w)))')] -> verb[ARG=?a, SEM=?SmVt] NP[ARG=?a, SEM=?SmNP] PP[ARG=?a, SEM=?SmPP]
+VP1[ARG=?a, SEM=(?SmRV)] -> verb[ARG=?a, SEM=?SmV] rest_verb[ARG=?a, SEM=?SmRV]
+VP1[ARG=?a, SEM=('(\w.'+?SmVi+'(w)&'+?SmPP+'(w))')] -> verb[ARG=?a, SEM=?SmVi] PP[ARG=?a, SEM=?SmPP]
+VP1[ARG=?a, SEM=?SmVi] -> verb[ARG=?a, SEM=?SmVi]
+VP1[ARG=?a, SEM=?SmVPNP] -> VP1sVF[ARG=?a, SEM=('')]
+VPsNP[ARG=?a, SEM=?SmVPNP] ->
+
+VP1VFneg[ARG=?a, SEM=('(\v.(\w.~(('+?SmVPV+'(v)(w)))))')] -> VP1sVF[ARG=?a, SEM=?SmVPV]
+VP1[ARG=?a, SEM=('(\v.\w.'+?SmNP+'((v(w))&('+?SmPP+'(w))))')] -> NP[ARG=?a, SEM=?SmNP] PP[ARG=?a, SEM=?SmPP]
+
+VP1stv[ARG=?a, SEM=('(\v.\w.('+?SmNP+'(v(w))))')] -> NP[ARG=?a, SEM=?SmNP]
+VP1siv[ARG=?a, SEM=('(\v.\w.(v(w))&('+?SmRV+'(w)))')] -> rest_verb[ARG=?a, SEM=?SmRV]
+VP1siv[ARG=?a, SEM=('(\v.\w.(v(w))&('+?SmPP+'(w)))')] -> PP[ARG=?a, SEM=?SmPP]
+VP1siv[ARG=?a, SEM=('(\v.\w.(v*(w)))')] ->
+
+
+rest_verb[ARG=?a, SEM=?SmAds] -> adjectives[ARG=?a, SEM=?SmAds]
+rest_verb[ARG=?a, SEM=?SmAP] -> adjective_phrase[ARG=?a, SEM=?SmAP]
+rest_verb[ARG=?a, SEM=?SmAP] -> detArtDef[ARG=?a, SEM=?SmDet] adjective_phrase[ARG=?a, SEM=?SmAP]
+rest_verb[ARG=?a, SEM=?SmRCP] -> rest_cp[ARG=?a, SEM=?SmRCP]
+
+
+
+detArtDef[ARG=?a, SEM=?article] -> article[ARG=?a, SEM=?article]
+detArtIndef[ARG=?a, SEM=?article] -> article[ARG=?a, SEM=('')]
+detQua[ARG=?a, SEM=('')] -> neg[ARG=?a, SEM=('')] quantifier[ARG=?a, SEM=('')] detArtDef[ARG=?a, SEM=('')]
+detQua[ARG=?a, SEM=('')] -> quantifier[ARG=?a, SEM=('')] detArtDef[ARG=?a, SEM=('')]
+detQua[ARG=?a, SEM=('')] -> quantifier[ARG=?a, SEM=('')]
+detQua[ARG=?a, SEM=('')] -> number[ARG=?a, SEM=('')]
+detQuaneg[ARG=?a, SEM=('')] -> number[ARG=?a, SEM=('')]
+detArtDef[ARG=?a, SEM=('')] -> quantifier[ARG=?a, SEM=('')]
+
+PP[ARG=?a, SEM=('(\z.'+?SmNP+'(SmP(z)))')] -> PP[ARG=?a, SEM=?SmP] NP[ARG=?a, SEM=?SmNP]
+PP[ARG=?a, SEM=(?SmCP)] -> match_preposition[ARG=?a, SEM=('')] comparative_phrase[ARG=?a, SEM=?SmCP]
+match_preposition -> 'de' | 'del' 'el'
+
+comparative_phrase[ARG=?a, SEM=('(\w.'+?SmD+'((\z.'+?SmN2+'(z)(w)))('+?SmRCP+'))')] -> detArtIndef[ARG=?a, SEM=?SmD] noun2[ARG=?a, SEM=?SmN2] rest_cp[ARG=?a, SEM=?SmRCP]
+comparative_phrase[ARG=?a, SEM=('(\w.exists(x0.'+?SmN2+'(x0)(w)&'+?SmRCP+'(x0)))')] -> noun2[ARG=?a, SEM=?SmN2] rest_cp[ARG=?a, SEM=?SmRCP]
+rest_cp[ARG=?a, SEM=('(\w.'+?SmNP+'('+?SmC+'(w)))')] -> comparative[ARG=?a, SEM=?SmC] NP[ARG=?a, SEM=?SmNP]
+
+
+RP[ARG=?a, SEM=?SmRP] -> RP1[ARG=?a, SEM=?SmRP]
+RP[ARG=?a, SEM=('(\w.'+?SmRP1+'(w)&'+SmRP+'(w))')] -> RP1[ARG=?a, SEM=?SmRP1] conjucion RP[ARG=?a, SEM=?SmRP]
+RP[ARG=?a, SEM=('(\w.'+?SmRP1+'(w)|'+SmRP+'(w))')] -> RP1[ARG=?a, SEM=?SmRP1] conjucion RP[ARG=?a, SEM=?SmRP]
+RP1[ARG=?a, SEM=?SmSNP] -> rel_pron1 SsNP[ARG=?a, SEM=?SmSNP]
+RP1[ARG=?a, SEM=?SmSNP] -> rel_pron2 SsNP[ARG=?a, SEM=?SmSNP]
+
+adjectives[ARG=?a, SEM=?SmA] -> adjectives1[ARG=?a, SEM=?SmA]
+adjectives[ARG=?a, SEM=('(\w.'+?SmA1+'(w)&'+?SmA+'(w))')] -> adjectives1[ARG=?a, SEM=?SmA1] conjucion adjectives[ARG=?a, SEM=?SmA]
+adjectives1[ARG=?a, SEM=('(\w.'+?SmA+'(w)|'+?SmAs+'(w))')] -> adj_cal[ARG=?a, SEM=?SmA] adjectives[ARG=?a, SEM=?SmAs]
+
+adjectives1[ARG=?a, SEM=?SmA] -> adj_cal[ARG=?a, SEM=?SmA]
+
+adjective_phrase[ARG=?a, SEM=('')] ->
+
+#neg -> 'no'
+
+numeric_value[ARG=?a, SEM=('(\P.P('+?Num+'--'+?Cant+'))')] -> number[ARG=?a, SEM=?Num] units[ARG=?a, SEM=?Cant]
+number[ARG=?a, SEM=('')] -> number_eqv rest_nb number_feature
+rest_nb[ARG=?a, SEM=('')] -> number_eqv[ARG=?a, SEM=('')] rest_nb[ARG=?a, SEM=('')]
+rest_nb[ARG=?a, SEM=('')] ->
+
+number_feature ->
+
+noun1[ARG=?a,SEM=?noun] -> noun[ARG=?a,SEM=?noun]
+noun2[ARG=?a,SEM=?attribute] -> attribute[ARG=?a,SEM=?attribute]
+
+
+
+
+
+
+
+
+
+
+
+##############
+###LEXICON
+##############
+#mares
+
+
+#  Pronombres Interrogativos
+
+int_pron1[SEM='\P.(\Q.(whq(x0,(P(x0)&Q(x0)))))'] -> 'que'
+int_pron1[AGR=[NUM='sg'],SEM='\P.(\Q.(whq(x0,(P(x0)&Q(x0)))))'] -> 'cada'
+int_pron1[AGR=[NUM='sg',GND='m',SEM='\P.(\Q.(whq(x0,(numberof(x0,(P(x0)&Q(x0)))))))']] -> 'cuanto'
+int_pron1[AGR=[NUM='sg',GND='f'],SEM='\P.(\Q.(whq(x0,(numberof(x0,(P(x0)&Q(x0)))))))']   -> 'cuanta'
+int_pron1[AGR=[NUM='pl',GND='m'],SEM='\P.(\Q.(whq(x0,(numberof(x0,(P(x0)&Q(x0)))))))']    -> 'cuantos'
+int_pron1[AGR=[NUM='pl',GND='f'],SEM='\P.(\Q.(whq(x0,(numberof(x0,(P(x0)&Q(x0)))))))'] -> 'cuantas'
+int_pron2[AGR=[NUM='sg'],SEM='\Q.(whq(x0,(Q(x0))))'] -> 'cual'
+int_pron2[AGR=[NUM='pl'],SEM='\Q.(whq(x0,(Q(x0))))'] -> 'cuales'
+int_pron2[SEM='\Q.(whq(x0,(Q(x0))))'] -> 'donde'
+int_pron2[AGR=[NUM='sg'],SEM='\Q.(whq(x0,(Q(x0))))'] -> 'quien'
+int_pron2[AGR=[NUM='pl'],SEM='\Q.(whq(x0,(Q(x0))))'] -> 'quienes'
+#Negacion
+
+neg[SEM='(w,(SmVPhere[w]))'] -> 'no'
+#Matchin preposition
+m_preposition -> 'de'|'del'|'el'|'con'
+
+
+#*  Comparativos  */
+comp[SEM='x>=y'] ->'mayor o igual a'
+comp[SEM='x>=y'] ->'mayor o igual que'
+comp[SEM='x<=y'] ->'menor o igual a'
+comp[SEM='x<=y'] ->'menor o igual que'
+comp[SEM='excede(x,y)'] ->'mayor a'
+comp[SEM='excede'] ->'mayor que'
+comp[SEM='~excede'] ->'menor a'
+comp[SEM='~excede'] ->'menor que'
+comp[SEM='x=y'] ->'igual a'
+comp[SEM='x=y'] ->'igual que'
+comp[SEM='x\\==y'] -> 'distinto de'
+comp[SEM='x\\==y'] -> 'diferente de'
+
+#  Pronombres Relativos  */
+rel_pron1 -> 'que'
+rel_pron2[AGR=[NUM='sg']] -> 'cuyo'
+rel_pron2[AGR=[NUM='sg']] -> 'cuya'
+rel_pron2[AGR=[NUM='pl']] -> 'cuyas'
+rel_pron2[AGR=[NUM='pl']] -> 'cuyos'
+
+
+#  Preposiciones */
+preposition[SEM='\\x.\y.en(x,y)'] -> 'en'
+preposition[SEM='\\x.\y.a(x,y)'] -> 'a'
+preposition[SEM='\\x.\y.ante(x,y)'] -> 'ante'
+preposition[SEM='\\x.\y.bajo(x,y)'] -> 'bajo'
+preposition[SEM='\\x.\y.para(x,y)'] -> 'para'
+preposition[SEM='\\x.\y.de(x,y)'] -> 'de'
+
+#*  Conjunciones */
+conjuciony -> 'y'
+conjuciono -> 'o'
+
+
+#articles
+article[AGR=[NUM='sg',GND='m']] -> 'el'
+article[AGR=[NUM='sg',GND='f'],SEM='(\P.(\Q.exists x0.(P(x0)&Q(x0))))'] -> 'la'
+article[AGR=[NUM='pl', GND='m'],SEM='(\P.(\Q.exists x0.(P(x0)&Q(x0))))'] -> 'los'
+#\(p,\(q,exists(x0,p*[x0]&q*[x0])))
+article[AGR=[NUM='pl',GND='f'],SEM='\P.(\Q.exists x0.(P(x0)&Q(x0)))'] -> 'las'
+article[AGR=[NUM='sg',GND='m'],SEM='\P.(\Q.exists x0.(P(x0)&Q(x0)))'] -> 'un'
+article[AGR=[NUM='sg',  GND='f'],SEM='\P.(\Q.(exists x0.(P(x0)&Q(x0))))'] -> 'una'
+article[AGR=[NUM='pl',GND='m'],SEM='(\P.(\Q.exists x0.(P(x0)&Q(x0))))'] -> 'unos'
+article[AGR=[NUM='pl',GND='f'],SEM='(\P.(\Q.exists x0.(P(x0)&Q(x0))))'] -> 'unas'
+#/*  Cuantificadores */
+
+quantifier[AGR=[NUM='pl',GND='m'],SEM='(\P.(\Q.(~(exists x0.(P(x0)&~Q(x0))))))'] -> 'todos'
+quantifier[AGR=[NUM='pl',GND='f',SEM='(\P.(\Q.(~(exists x0.(P(x0)&~Q(x0))))))' ]] -> 'todas'
+quantifier[AGR=[NUM='sg'],SEM='(\P.(\Q.exists x0.(P(x0)&Q(x0))))'] -> 'cualquier'
+quantifier[AGR=[NUM='sg',GND='m'],SEM='(\P.(\Q.exists x0.(P(x0)&~Q(x0))))'] -> 'algun'
+quantifier[AGR=[NUM='sg',GND='f'],SEM='(\P.(\Q.exists x0.(P(x0)&~Q(x0))))'] -> 'alguna'
+quantifier[AGR=[NUM='pl',GND='m'],SEM='(\P.(\Q.exists x0.(P(x0)&~Q(x0))))'] -> 'algunos'
+quantifier[AGR=[NUM='pl',GND='f'],SEM='(\P.(\Q.exists x0.(P(x0)&~Q(x0))))'] -> 'algunas'
+quantifier[AGR=[NUM='sg',GND='m'],SEM='(\P.(\Q.(~(exists x0.(P(x0)&Q(x0))))))'] -> 'ningun'
+quantifier[AGR=[NUM='sg',GND='f'],SEM='(\P.(\Q.(~(exists x0.(P(x0)&Q(x0))))))'] -> 'ninguna'
+
+units  -> 'peso'
+units  -> 'pesos'
+units  -> 'de pesos'
+
+
+number_eqv  -> 'un'
+number_eqv  -> 'uno'
+number_eqv  -> 'dos'
+number_eqv  -> 'tres'
+number_eqv  -> 'cuatro'
+number_eqv  -> 'cinco'
+number_eqv  -> 'seis'
+number_eqv  -> 'siete'
+number_eqv  -> 'ocho'
+number_eqv  -> 'nueve'
+number_eqv  -> 'diez'
+number_eqv  -> 'once'
+number_eqv  -> 'doce'
+number_eqv  -> 'trece'
+number_eqv  -> 'catorce'
+number_eqv  -> 'quince'
+number_eqv  -> 'dieciseis'
+number_eqv  -> 'diecisiete'
+number_eqv  -> 'dieciocho'
+number_eqv  -> 'diecinueve'
+number_eqv  -> 'veinte'
+number_eqv  -> 'treinta'
+number_eqv  -> 'cuarenta'
+number_eqv  -> 'cincuenta'
+number_eqv  -> 'sesenta'
+number_eqv  -> 'setenta'
+number_eqv  -> 'ochenta'
+number_eqv  -> 'noventa'
+number_eqv  -> 'cien'
+number_eqv  -> 'docientos'
+number_eqv  -> 'trecientos'
+number_eqv  -> 'cuatrocientos'
+number_eqv  -> 'quinientos'
+number_eqv  -> 'seicientos'
+number_eqv  -> 'setecientos'
+number_eqv  -> 'ochocientos'
+number_eqv  -> 'novecientos'
+number_eqv  -> 'mil'
+number_eqv  -> 'millon'
+number_eqv  -> 'millones'
+
+noun[AGR=[NUM='sg',ROOT='pais',GND='f'],SEM='\\x.(pais(x))'] -> 'pais'
+noun[AGR=[NUM='pl',ROOT='pais',GND='m'],SEM='\\x.(pais(x))']->'paises'
+noun[AGR=[NUM='sg',ROOT='ciudad',GND='f'],SEM='\\x.(ciudad(x))']->'ciudad'
+noun[AGR=[NUM='pl',ROOT='ciudad',GND='f'],SEM='\\x.(ciudad(x))']->'ciudades'
+noun[AGR=[NUM='sg',ROOT='oceano',GND='m'],SEM='\\x.(oceano(x))']->'oceano'
+noun[AGR=[NUM='pl',ROOT='oceano',GND='m'],SEM='\\x.(oceano(x))']->'oceanos'
+noun[AGR=[NUM='sg',ROOT='lago',GND='m'],SEM='\\x.(lago(x))']->'lago'
+noun[AGR=[NUM='pl',ROOT='lago',GND='m'],SEM='\\x.(lago(x))']->'lagos'
+noun[AGR=[NUM='sg',ROOT='laguna',GND='f'],SEM='\\x.(laguna(x))']->'laguna'
+noun[AGR=[NUM='pl',ROOT='laguna',GND='f'],SEM='\\x.(laguna(x))']->'lagunas'
+noun[AGR=[NUM='sg',ROOT='rio',GND='m'],SEM='\\x.(rio(x))']->'rio'
+noun[AGR=[NUM='pl',OOT='rio',GND='m'],SEM='\\x.(rio(x))']->'rios'
+noun[AGR=[NUM='sg',ROOT='mar',GND='m'],SEM='\\x.(mar(x))']->'mar'
+noun[AGR=[NUM='pl',ROOT='mar',GND='m'],SEM='\\x.(mar(x))']->'mares'
+noun[AGR=[NUM='sg',ROOT='latitud',GND='f'],SEM='\\x.(latitud(x))']->'latitud'
+noun[AGR=[NUM='pl',ROOT='latitud',GND='f'],SEM='\\x.(latitud(x))']->'latitudes'
+noun[AGR=[NUM='sg',ROOT='longitud',GND='f'],SEM='\\x.(longitud(x))']->'longitud'
+noun[AGR=[NUM='pl',ROOT='longitud',GND='f'],SEM='\\x.(longitud(x))']->'longitudes'
+noun[AGR=[NUM='sg',ROOT='area',GND='m'],SEM='\\x.(area(x))']->'area'
+noun[AGR=[NUM='sg',ROOT='area',GND='f'],SEM='\\x.(area(x))']->'areas'
+noun[AGR=[NUM='sg',ROOT='lugar',GND='m'],SEM='\\x.(lugar(x))']->'lugar'
+noun[AGR=[NUM='sg',ROOT='region',GND='f'],SEM='\\x.(region(x))']->'region'
+noun[AGR=[NUM='pl',ROOT='region',GND='f'],SEM='\\x.(region(x))']->'regiones'
+
+#/*  Atributos */
+mar[SEM='\P.P(mar_negro)'] -> 'Mar Negro'
+mar[SEM='\P.P(mediterraneo)'] -> 'Mediterraneo'
+
+oceano[SEM='\P.P(Atlantico)'] -> 'Atlantico'
+oceano[SEM='\P.P(Pacifico)'] -> 'Pacifico'
+attribute[AGR=[NUM='sg',ROOT='capital',GND='f'],SEM='(\y.\\x.(capital(x,y)))'] -> 'capital'
+attribute[AGR=[NUM='pl',ROOT='capital',GND='f'],SEM='(\y.\\x.(capitales(x,y)))'] -> 'capitales'
+attribute[AGR=[NUM='sg',ROOT='ciudad',GND='f']] -> 'ciudad'
+attribute[AGR=[NUM='pl',ROOT='ciudad',GND='f']]-> 'ciudades'
+attribute[AGR=[NUM='sg',ROOT='nombre',GND='m']] -> 'nombre'
+attribute[AGR=[NUM='pl',ROOT='nombre',GND='m']] -> 'nombres'
+attribute[AGR=[NUM='sg',ROOT='poblacion',GND='f'], SEM='\y.(\\x.(poblacion(x,y)))'] -> 'poblacion'
+attribute[AGR=[NUM='pl',ROOT='poblacion',GND='f']] -> 'poblaciones'
+attribute[AGR=[NUM='sg',ROOT='moneda',GND='f' ]] -> 'moneda'
+attribute[AGR=[NUM='pl',ROOT='moneda',GND='f']] -> 'monedas'
+attribute[AGR=[NUM='sg',ROOT='rio',GND='m']] -> 'rio'
+attribute[AGR=[NUM='pl',ROOT='rio',GND='m']] -> 'rios'
+
+
+# hacer el pnname
+#hombres propios
+proper_name[AGR=?a,SEM=?pname] -> pname[AGR=?a,SEM=?pname]
+
+pname -> 'LOL'
+pname[SEM=?pname] -> mar[SEM=?pname]
+pname[SEM=?pname] -> oceano[SEM=?pname]
+
+pname[SEM=?pname] -> pais
+pname[SEM=?pname] -> capital
+pname[SEM=?pname] -> ciudad[SEM=?pname]
+pname[SEM=?pname] -> rio
+pname[SEM=?pname] -> masa_de_agua
+pname[SEM=?pname] -> continente
+pname[SEM=?pname] -> circulo_de_latitud
+
+pname[SEM=?pname] -> 'los estados unidos'  | 'estados unidos'
+pname[SEM=?pname] -> 'la gran bretaña'|'gran bretaña'
+
+
+
+#/*AdjetivosCalificativos*#/
+
+adj_cal[AGR=[NUM='sg',GND='m']] ->'europeo'
+adj_cal[AGR=[NUM='pl',GND='m']] ->'europeos'
+adj_cal[AGR=[NUM='sg',GND='f']] ->'europea'
+adj_cal[AGR=[NUM='pl',GND='f']] ->'europeas'
+adj_cal[AGR=[NUM='sg',GND='m']] ->'americano'
+adj_cal[AGR=[NUM='pl',GND='m'],SEM='\y.(americano(y))'] ->'americanos'
+adj_cal[AGR=[NUM='sg',GND='f']] ->'americana'
+adj_cal[AGR=[NUM='pl',GND='f']] ->'americanas'
+adj_cal[AGR=[NUM='sg',GND='m']] ->'asiatico'
+adj_cal[AGR=[NUM='sg',GND='f']] ->'asiatica'
+adj_cal[AGR=[NUM='pl',GND='m']] ->'asiaticos'
+adj_cal[AGR=[NUM='pl',GND='f']] ->'asiaticas'
+adj_cal[AGR=[NUM='sg',GND='m']] ->'africano'
+adj_cal[AGR=[NUM='pl',GND='m']] ->'africanos'
+adj_cal[AGR=[NUM='sg',GND='f']] ->'africana'
+adj_cal[AGR=[NUM='pl',GND='f']] ->'africanas'
+
+verb[AGR=[NUM='sg'],SEM=?SmVt] -> verb[AGR=[NUM='sg'],SEM=?SmVt] verb_aux
+verb_aux -> 'a'
+#/*Verbos*#/
+
+verb[AGR=[NUM='sg'],SEM='\\x.\y.(x=y)'] ->'es'
+verb[AGR=[NUM='pl'],SEM='\\x.\y.(x=y)'] ->'son'
+verb[AGR=[NUM='sg'],SEM='\\x.\y.(x=y)'] ->'sea'
+verb[AGR=[NUM='pl'],SEM='\\x.\y.(x=y)'] ->'sean'
+verb[AGR=[NUM='sg'],SEM='\\x.\y.(en(x,y))'] ->'esta'
+verb[AGR=[NUM='pl'],SEM='\\x.\y.(en(x,y))'] ->'estan'
+verb[AGR=[NUM='pl'],SEM='\\x.\y.(en(x,y))'] ->'este'
+verb[AGR=[NUM='pl'],SEM='\\x.\y.(en(x,y))'] ->'esten'
+verb[SEM='\y.true(y)'] -> 'hay'
+verb[AGR=[NUM='sg'] , SEM='\\x.(\y.(x=y))'] ->'tiene'
+verb[AGR=[NUM='pl'],SEM='\\x.\y.(x=y)'] ->'tienen'
+verb[AGR=[NUM='sg'],SEM='\\x.\y.(x=y)'] ->'tenga'
+verb[AGR=[NUM='pl'],SEM='\\x.\y.(x=y)'] ->'tengan'
+verb[AGR=[NUM='sg'],SEM='\\x.(\y.(excede(x,y)))'] ->'excede'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(excede(x,y)))'] ->'exceden'
+verb[AGR=[NUM='sg'],SEM='\\x.(\y.(excede(x,y)))'] ->'exceda'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(excede(x,y)))'] ->'excedan'
+verb[AGR=[NUM='sg'],SEM='\y.true(y)'] -> 'existe'
+verb[AGR=[NUM='pl'],SEM='\y.true(y)'] -> 'existen'
+verb[AGR=[NUM='pl'],SEM='\y.true(y)'] -> 'exista'
+verb[AGR=[NUM='pl'],SEM='\y.true(y)'] -> 'existan'
+verb[AGR=[NUM='sg'],SEM='\\x.(\y.(fluye(x,y)))'] ->'fluye'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(fluye(x,y)))'] ->'fluyen'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(fluye(x,y)))'] ->'fluya'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(fluye(x,y)))'] ->'fluyan'
+verb[AGR=[NUM='sg'],SEM='\\x.(\y.(muere(x,y)))'] ->'nace'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(muere(x,y)))'] ->'nacen'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(muere(x,y)))'] ->'nazca'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(muere(x,y)))'] ->'nazcan'
+verb[AGR=[NUM='sg'],SEM='\\x.(\y.(muere(x,y)))'] ->'muere'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(muere(x,y)))'] ->'mueren'
+verb[AGR=[NUM='sg'],SEM='\\x.(\y.(muere(x,y)))'] ->'muera'
+verb[AGR=[NUM='sg'],SEM='\\x.(\y.(muere(x,y)))'] ->'mueran'
+verb[AGR=[NUM='sg'],SEM='\\x.(\y.(fluye(x,y)))'] ->'cruza'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(fluye(x,y)))'] ->'cruzan'
+verb[AGR=[NUM='sg'],SEM='\\x.(\y.(fluye(x,y)))'] ->'cruce'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(fluye(x,y)))'] ->'crucen'
+verb[AGR=[NUM='sg'],SEM='\\x.(\y.(fluye(x,y)))'] ->'atravieza'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(fluye(x,y)))'] ->'atraviezan'
+verb[AGR=[NUM='sg'],SEM='\\x.(\y.(fluye(x,y)))'] ->'atraviece'
+verb[AGR=[NUM='pl'],SEM='\\x.(\y.(fluye(x,y)))'] ->'atraviecen'
+
+
+verb[AGR=[NUM='sg'],SEM='(\\x.\y.colinda(x,y))'] ->'colinda con'
+verb[AGR=[NUM='pl'],SEM='(\\x.\y.colinda(x,y))'] ->'colindan con'
+verb[AGR=[NUM='pl']] ->'colinde con'
+verb[AGR=[NUM='pl']] ->'colinden con'
+
+
+
+#verb_type ->'exceder'
+#verb_type ->'ser'
+#verb_type ->'tener'
+#verb_type ->'colinda con'
+#verb_type ->'estar'
+#verb_type ->'cruzar'
+#verb_type ->'atravezar'
+
+
+#verb_type ->'ser'
+#verb_type ->'haber'
+#verb_type ->'existir'
+#verb_type ->'fluir'
+#verb_type ->'nacer'
+#verb_type ->'morir'
+
+
+#DBWORLD PREDICADOS
+
+$PAIS
+$CIUDADES
